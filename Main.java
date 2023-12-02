@@ -1,4 +1,5 @@
 import java.util.Random;
+import java.util.Scanner;
 import java.util.Arrays;
 import java.util.ArrayList;
 
@@ -190,6 +191,9 @@ class Main {
       case "B_":
         B_();
         break;
+      default:
+        System.out.println("error, no command: "+methodName);
+        System.exit(1);
     }
   }
 
@@ -718,27 +722,32 @@ class Main {
     }
     printRubik(rubik);
     
-    String string = "";
+    String scramble = "";
 
     /*for(String scramble: "B U U B F R U U R R U U L B U U L L F U R B R B U L B F B B R U B U B U L B R L U R U F F R F L U U U B R U R B R F U U F F U U F B B U U B F R B F R F U B U U B L F B B B U F L F L R R U B B U F B F F L L B F B R U B U R L F B L F R U R U B F U F R U F R B F B L U L R L L B B F B U U U B R R R U U U F L B B U U L B B B L F L L L U U U B U U L R L U U U L B F L R U U R B B R F B F F B B R L L L R R B B F L L L F L R U B L L B U L F B U L U U U F U B L U U B B L F R F L U B U B R R B F F L L L R F L R B B L F F U B B B U R R B U L R L F R F R R L L B L B L U U R B L L L U R L R R L F L F U L B B U L U B R U R L F F F B L L B R R U B R F U F L F U F F F L B U F L F U U U L B F L L L L U B L U U L B B U U B U R U F R L F B B B B F B R R U B F L B B L U L L B F B L L R R F L L L L F L U B R F R L U L F L U F L U L U L B F F F F F L L L L R B F B U R R F U F L R B R B R B U L L L F U U L F F F U B B U L R B F F U L F B B F F F F U U F L U B L B F B U U R B F R U F U U B R B B L R F U F L R".split(" ")){
       call(scramble);
     }*/
     
-    for(int time=0;time<10;time++){
-      String random = (new String[]{"U","R","L","F","D","B","U_","R_","L_","F_","D_","B_"})[(int) (Math.random()*5)];
-      call(random);
-      string+=random+" ";
+    Scanner systemIn = new Scanner(System.in);
+    int numOfScrambles=Integer.valueOf(systemIn.next());
+    for(int i=0;i<numOfScrambles;i++){
+      String inputScramble=systemIn.next();
+      call(inputScramble);
     }
+    systemIn.close();
+
+    // for(int time=0;time<10;time++){
+    //   String random = (new String[]{"U","R","L","F","D","B","U_","R_","L_","F_","D_","B_"})[(int) (Math.random()*5)];
+    //   call(random);
+    //   string+=random+" ";
+    // }
     
     System.out.println("\nStarting Solving\n");
 
     IsSolvingStarted = true;
-    /*for(int time=0;time<5;time++){
-      solve();
-    }*/
     
     solve();
-    System.out.println("scrambles: "+string);
+    System.out.println("scrambles: "+scramble);
     System.out.println("solution: "+String.join(", ",solution));
     System.out.println("solution moves: "+solution.size());
     
