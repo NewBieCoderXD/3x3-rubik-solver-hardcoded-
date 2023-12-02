@@ -3,7 +3,7 @@ import java.util.Scanner;
 import java.util.Arrays;
 import java.util.ArrayList;
 
-class Main {
+class rubikFROOK {
   private final int[][] directions = new int[][]{
     {1, 3, 4, 2},
     {3, 0, 2, 5},
@@ -22,7 +22,7 @@ class Main {
   public boolean IsSolvingStarted = false;
   public int[][] rubik;
   public static void main(String[] args) {
-    Main main = new Main();
+    rubikFROOK main = new rubikFROOK();
     main.mainnaja();
   }
   private int findIndex(int[] list, int value) {
@@ -732,6 +732,7 @@ class Main {
     int numOfScrambles=Integer.valueOf(systemIn.next());
     for(int i=0;i<numOfScrambles;i++){
       String inputScramble=systemIn.next();
+      scramble+=inputScramble+" ";
       call(inputScramble);
     }
     systemIn.close();
