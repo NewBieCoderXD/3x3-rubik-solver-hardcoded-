@@ -1,4 +1,4 @@
-# 3x3-rubik-solver-hardcoded-
+# 3x3-rubik-solver-hardcoded
 
 This is a hard-coded program solving 3x3 rubik.
 
