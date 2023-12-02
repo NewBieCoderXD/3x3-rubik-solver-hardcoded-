@@ -1,4 +1,4 @@
-![image](https://github.com/NewBieCoderXD/3x3-rubik-solver-hardcoded-/assets/93028567/f80ab9b9-1532-4f79-b3ef-1c8cc1d24734)# 3x3-rubik-solver-hardcoded-
+# 3x3-rubik-solver-hardcoded-
 
 This is a hard-coded program solving 3x3 rubik.
 
