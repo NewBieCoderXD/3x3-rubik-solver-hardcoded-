@@ -1,6 +1,6 @@
-import java.util.Random;
+//run command: jar cfe rubikFROOK.jar rubikFROOK rubikFROOK.class
+
 import java.util.Scanner;
-import java.util.Arrays;
 import java.util.ArrayList;
 
 class rubikFROOK {
