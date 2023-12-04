@@ -3,7 +3,7 @@
 This is a hard-coded program solving 3x3 rubik.
 
 ### Prerequirement
-- Java JDK
+- Java JRE
 
 ### How to run
 to run use command "java rubikFROOK" or "rubikFROOK".
