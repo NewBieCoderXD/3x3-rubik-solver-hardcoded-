@@ -1,4 +1,4 @@
 #!/bin/bash
 # echo $(dirname "$0")
 # java -cp $(dirname "$0") rubikFROOK
-java -jar $(dirname "$0")/../dist/rubikFROOK.jar
+java -jar $(dirname "$0")/../build/rubikFROOK.jar

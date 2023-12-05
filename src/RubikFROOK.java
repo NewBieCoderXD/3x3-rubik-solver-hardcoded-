@@ -1,5 +1,5 @@
 package src;
-//run command: jar cfe rubikFROOK.jar rubikFROOK rubikFROOK.class
+//run command: jar cfmv rubikFROOK.jar META-INF/MANIFEST.MF -C bin .
 
 import java.util.Scanner;
 import java.util.ArrayList;
