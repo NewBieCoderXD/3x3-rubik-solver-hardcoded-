@@ -1,9 +1,14 @@
+package src;
 //run command: jar cfe rubikFROOK.jar rubikFROOK rubikFROOK.class
 
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
 
-class rubikFROOK {
+import lib.Pair;
+
+public class RubikFROOK {
   private final int[][] directions = new int[][]{
     {1, 3, 4, 2},
     {3, 0, 2, 5},
@@ -19,12 +24,10 @@ class rubikFROOK {
     "L",
     "B"
   };
-  public boolean IsSolvingStarted = false;
   public int[][] rubik;
-  public static void main(String[] args) {
-    rubikFROOK main = new rubikFROOK();
-    main.mainnaja();
-  }
+
+  private boolean detailPrint=false;
+  
   private int findIndex(int[] list, int value) {
     for (int i = 0; i < list.length; i++) {
       if (list[i] == value) {
@@ -76,9 +79,7 @@ class rubikFROOK {
   
   //direction is top side
   private void addToSolution(String s){
-    if(IsSolvingStarted){
-      solution.add(s);
-    }
+    solution.add(s);
   }
   public void R(){
     rotateClockwise(1,1);
@@ -153,48 +154,90 @@ class rubikFROOK {
     printRubik(rubik);
   }
 
+  private boolean IsClockwiseNotation(String notation){
+    return notation.length()==1;
+  }
+
+  private void throwError(String message){
+    System.err.println(message);
+    System.exit(-1);
+  }
+
+  private Map<String, Pair<Integer,Integer>> faceAndDirOfNotation=Map.of(
+    "R", new Pair<>(1,1),
+    "L", new Pair<>(1,-1),
+    "U", new Pair<>(1,0),
+    "D", new Pair<>(1,2),
+    "F", new Pair<>(3,1),
+    "B", new Pair<>(3,3)
+  );
+
   private void call(String methodName){
-    switch(methodName){
-      case "R":
-        R();
-        break;
-      case "U":
-        U();
-        break;
-      case "L":
-        L();
-        break;
-      case "D":
-        D();
-        break;
-      case "F":
-        F();
-        break;
-      case "B":
-        B();
-        break;
-      case "R_":
-        R_();
-        break;
-      case "U_":
-        U_();
-        break;
-      case "L_":
-        L_();
-        break;
-      case "D_":
-        D_();
-        break;
-      case "F_":
-        F_();
-        break;
-      case "B_":
-        B_();
-        break;
-      default:
-        System.out.println("error, no command: "+methodName);
-        System.exit(1);
+    if(IsClockwiseNotation(methodName)){
+      Pair<Integer,Integer> faceAndDir=faceAndDirOfNotation.get(methodName);
+      if(faceAndDir==null){
+        throwError(methodName+" is not valid notation");
+      }
+      // rotateClockwise(faceAndDir.getLeft(), faceAndDir.getRight());
     }
+    else{
+      if(methodName.charAt(1)!='_'||methodName.charAt(1)!='\''){
+        throwError(methodName+" is not valid notation");
+      }
+      // change R_ to R'
+      methodName=methodName.charAt(0)+"'";
+      Pair<Integer,Integer> faceAndDir=faceAndDirOfNotation.get(methodName.charAt(0)+"");
+      if(faceAndDir==null){
+        throwError(methodName+" is not valid notation");
+      }
+      // rotateAntiClockwise(faceAndDir.getKey(), faceAndDir.getValue());
+    }
+    addToSolution(methodName);
+    if(detailPrint){
+      System.out.println(methodName);
+      printRubik(rubik);
+    }
+    // switch(methodName){
+    //   case "R":
+    //     R();
+    //     break;
+    //   case "U":
+    //     U();
+    //     break;
+    //   case "L":
+    //     L();
+    //     break;
+    //   case "D":
+    //     D();
+    //     break;
+    //   case "F":
+    //     F();
+    //     break;
+    //   case "B":
+    //     B();
+    //     break;
+    //   case "R_":
+    //     R_();
+    //     break;
+    //   case "U_":
+    //     U_();
+    //     break;
+    //   case "L_":
+    //     L_();
+    //     break;
+    //   case "D_":
+    //     D_();
+    //     break;
+    //   case "F_":
+    //     F_();
+    //     break;
+    //   case "B_":
+    //     B_();
+    //     break;
+    //   default:
+    //     System.out.println("error, no command: "+methodName);
+    //     System.exit(1);
+    // }
   }
 
   private void rotateTo(int side,int targetSide,String action){
@@ -712,13 +755,12 @@ class rubikFROOK {
     System.out.println("\n"+"finish PLL "+solution.size()+"\n");
   }
   
-  public void mainnaja(){
+  public void mainSolving(){
     rubik = new int[6][8];
     //generate rubik
     for(int i=0;i<6;i++){
-      rubik[i]=new int[]{
-        i,i,i,i,i,i,i,i
-      };
+      rubik[i]=new int[8];
+      Arrays.fill(rubik[i],i);
     }
     printRubik(rubik);
     
@@ -744,51 +786,50 @@ class rubikFROOK {
     // }
     
     System.out.println("\nStarting Solving\n");
-
-    IsSolvingStarted = true;
     
     solve();
     System.out.println("scrambles: "+scramble);
     System.out.println("solution: "+String.join(", ",solution));
     System.out.println("solution moves: "+solution.size());
     
-    int i=0;
-    while(i<solution.size()-1){
-      String a = solution.get(i);
-      String b = solution.get(i+1);
-      if(a.charAt(0)==b.charAt(0)){
-        if(a.length()!=b.length()){
-          System.out.println("cancel "+a);
+    // int i=0;
+    // while(i<solution.size()-1){
+    for(int i=0;i<solution.size()-1;i++){
+      String currentMove = solution.get(i);
+      String nextMove = solution.get(i+1);
+      // if current and next cancels out
+      if(currentMove.charAt(0)==nextMove.charAt(0)){
+        if(currentMove.length()!=nextMove.length()){
+          System.out.println("cancel "+currentMove);
           solution.remove(i);
           solution.remove(i);
         }
       }
+      // if there is double next
       if(solution.size()-i<3){
-        i++;
         continue;
       }
-      String c = solution.get(i+2);
-      if(a==b&&b==c){
-        System.out.println("replace "+a);
+      String afterNextMove = solution.get(i+2);
+      if(currentMove==nextMove&&nextMove==afterNextMove){
+        System.out.println("replace "+currentMove);
         solution.remove(i);
         solution.remove(i);
         solution.remove(i);
         if(i<solution.size()-3){
-          if(solution.get(i)==a){
-            System.out.println("remove "+a);
+          if(solution.get(i)==currentMove){
+            System.out.println("remove "+currentMove);
             solution.remove(i);
-            i++;
             continue;
           }
         }
-        if(a.length()>1){
-          solution.add(i,Character.toString(a.charAt(0)));
+        // is clockwise
+        if(currentMove.length()>1){
+          solution.add(i,Character.toString(currentMove.charAt(0)));
         }
         else{
-          solution.add(i,a+"'");
+          solution.add(i,currentMove+"'");
         }
       }
-      i++;
     }
     System.out.println("solution: "+String.join(", ",solution));
     System.out.println("solution moves: "+solution.size());
