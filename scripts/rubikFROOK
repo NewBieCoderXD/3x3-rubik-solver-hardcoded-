@@ -1,4 +1,4 @@
 #!/bin/bash
 # echo $(dirname "$0")
 # java -cp $(dirname "$0") rubikFROOK
-java -jar $(dirname "$0")/../build/run.jar
+java -jar $(dirname "${BASH_SOURCE[0]}")/../build/run.jar $@
