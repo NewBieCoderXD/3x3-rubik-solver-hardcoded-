@@ -1,10 +1,13 @@
 package src;
-//run command: jar cfmv rubikFROOK.jar META-INF/MANIFEST.MF -C bin .
 
 import java.util.Scanner;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Properties;
+import java.util.HashMap;
 
 import lib.Pair;
 
@@ -26,7 +29,7 @@ public class RubikFROOK {
   };
   public int[][] rubik;
 
-  private boolean detailPrint=false;
+  public boolean detailPrint=false;
   
   private int findIndex(int[] list, int value) {
     for (int i = 0; i < list.length; i++) {
@@ -81,85 +84,85 @@ public class RubikFROOK {
   private void addToSolution(String s){
     solution.add(s);
   }
-  public void R(){
-    rotateClockwise(1,1);
-    System.out.println("R");
-    addToSolution("R");
-    printRubik(rubik);
-  }
-  public void L(){
-    rotateClockwise(1,-1);
-    System.out.println("L");
-    addToSolution("L");
-    printRubik(rubik);
-  }
-  public void U(){
-    rotateClockwise(1,0);
-    System.out.println("U");
-    addToSolution("U");
-    printRubik(rubik);
-  }
-  public void D(){
-    rotateClockwise(1,2);
-    System.out.println("D");
-    addToSolution("D");
-    printRubik(rubik);
-  }
-  public void F(){
-    rotateClockwise(3,1);
-    System.out.println("F");
-    addToSolution("F");
-    printRubik(rubik);
-  }
-  public void B(){
-    rotateClockwise(3,3);
-    System.out.println("B");
-    addToSolution("B");
-    printRubik(rubik);
-  }
-  public void R_(){
-    rotateAntiClockwise(1,1);
-    System.out.println("R'");
-    addToSolution("R'");
-    printRubik(rubik);
-  }
-  public void L_(){
-    rotateAntiClockwise(1,-1);
-    System.out.println("L'");
-    addToSolution("L'");
-    printRubik(rubik);
-  }
-  public void U_(){
-    rotateAntiClockwise(1,0);
-    System.out.println("U'");
-    addToSolution("U'");
-    printRubik(rubik);
-  }
-  public void D_(){
-    rotateAntiClockwise(1,2);
-    System.out.println("D'");
-    addToSolution("D'");
-    printRubik(rubik);
-  }
-  public void F_(){
-    rotateAntiClockwise(3,1);
-    System.out.println("F'");
-    addToSolution("F'");
-    printRubik(rubik);
-  }
-  public void B_(){
-    rotateAntiClockwise(3,3);
-    System.out.println("B'");
-    addToSolution("B'");
-    printRubik(rubik);
-  }
+  // public void call("R"){
+  //   rotateClockwise(1,1);
+  //   System.out.println("R");
+  //   addToSolution("R");
+  //   printRubik(rubik);
+  // }
+  // public void L(){
+  //   rotateClockwise(1,-1);
+  //   System.out.println("L");
+  //   addToSolution("L");
+  //   printRubik(rubik);
+  // }
+  // public void call("U"){
+  //   rotateClockwise(1,0);
+  //   System.out.println("U");
+  //   addToSolution("U");
+  //   printRubik(rubik);
+  // }
+  // public void D(){
+  //   rotateClockwise(1,2);
+  //   System.out.println("D");
+  //   addToSolution("D");
+  //   printRubik(rubik);
+  // }
+  // public void call("F"){
+  //   rotateClockwise(3,1);
+  //   System.out.println("F");
+  //   addToSolution("F");
+  //   printRubik(rubik);
+  // }
+  // public void B(){
+  //   rotateClockwise(3,3);
+  //   System.out.println("B");
+  //   addToSolution("B");
+  //   printRubik(rubik);
+  // }
+  // public void call("R_"){
+  //   rotateAntiClockwise(1,1);
+  //   System.out.println("R'");
+  //   addToSolution("R'");
+  //   printRubik(rubik);
+  // }
+  // public void L_(){
+  //   rotateAntiClockwise(1,-1);
+  //   System.out.println("L'");
+  //   addToSolution("L'");
+  //   printRubik(rubik);
+  // }
+  // public void call("U_"){
+  //   rotateAntiClockwise(1,0);
+  //   System.out.println("U'");
+  //   addToSolution("U'");
+  //   printRubik(rubik);
+  // }
+  // public void D_(){
+  //   rotateAntiClockwise(1,2);
+  //   System.out.println("D'");
+  //   addToSolution("D'");
+  //   printRubik(rubik);
+  // }
+  // public void call("F_"){
+  //   rotateAntiClockwise(3,1);
+  //   System.out.println("F'");
+  //   addToSolution("F'");
+  //   printRubik(rubik);
+  // }
+  // public void B_(){
+  //   rotateAntiClockwise(3,3);
+  //   System.out.println("B'");
+  //   addToSolution("B'");
+  //   printRubik(rubik);
+  // }
 
   private boolean IsClockwiseNotation(String notation){
     return notation.length()==1;
   }
 
-  private void throwError(String message){
-    System.err.println(message);
+  public void throwError(String message){
+    System.err.println("Error: "+message);
     System.exit(-1);
   }
 
@@ -171,17 +174,19 @@ public class RubikFROOK {
     "F", new Pair<>(3,1),
     "B", new Pair<>(3,3)
   );
-
   private void call(String methodName){
+    call(methodName,false);
+  }
+  private void call(String methodName, boolean IsScramble){ //default value is false
     if(IsClockwiseNotation(methodName)){
       Pair<Integer,Integer> faceAndDir=faceAndDirOfNotation.get(methodName);
       if(faceAndDir==null){
         throwError(methodName+" is not valid notation");
       }
-      // rotateClockwise(faceAndDir.getLeft(), faceAndDir.getRight());
+      rotateClockwise(faceAndDir.getFirst(), faceAndDir.getSecond());
     }
     else{
-      if(methodName.charAt(1)!='_'||methodName.charAt(1)!='\''){
+      if(methodName.charAt(1)!='_'&&methodName.charAt(1)!='\''){
         throwError(methodName+" is not valid notation");
       }
       // change R_ to R'
@@ -190,19 +195,21 @@ public class RubikFROOK {
       if(faceAndDir==null){
         throwError(methodName+" is not valid notation");
       }
-      // rotateAntiClockwise(faceAndDir.getKey(), faceAndDir.getValue());
+      rotateAntiClockwise(faceAndDir.getFirst(), faceAndDir.getSecond());
     }
-    addToSolution(methodName);
+    if(!IsScramble){
+      addToSolution(methodName);
+    }
+    unimportantPrint(methodName);
     if(detailPrint){
-      System.out.println(methodName);
       printRubik(rubik);
     }
     // switch(methodName){
     //   case "R":
-    //     R();
+    //     call("R");
     //     break;
     //   case "U":
-    //     U();
+    //     call("U");
     //     break;
     //   case "L":
     //     L();
@@ -211,16 +218,16 @@ public class RubikFROOK {
     //     D();
     //     break;
     //   case "F":
-    //     F();
+    //     call("F");
     //     break;
     //   case "B":
     //     B();
     //     break;
     //   case "R_":
-    //     R_();
+    //     call("R_");
     //     break;
     //   case "U_":
-    //     U_();
+    //     call("U_");
     //     break;
     //   case "L_":
     //     L_();
@@ -229,7 +236,7 @@ public class RubikFROOK {
     //     D_();
     //     break;
     //   case "F_":
-    //     F_();
+    //     call("F_");
     //     break;
     //   case "B_":
     //     B_();
@@ -268,7 +275,7 @@ public class RubikFROOK {
           int latDirection = findIndex(directions[latSide],i);
           int color = rubik[latSide][(latDirection*2+1)%8];
           if(i!=5||latSide!=color){
-            System.out.println("i "+i+" latSide "+latSide+" Color "+color+" direction "+direction);
+            // System.out.println("i "+i+" latSide "+latSide+" Color "+color+" direction "+direction);
             if(i==5){
               call(faceToNotation[latSide]);
               call(faceToNotation[latSide]);
@@ -291,14 +298,13 @@ public class RubikFROOK {
               continue;
             }
             if(direction==1||direction==3){
-              System.out.println("this");
               if(findIndex(directions[i],color)<5){
                 rotateTo(findIndex(directions[i],color),direction,faceToNotation[i]);
                 call(faceToNotation[color]+((direction>2)?"_":""));
                 continue;
               }
               if(color==i){
-                U_();
+                call("U_");
                 call(faceToNotation[directions[5][(findIndex(directions[5],color)+1)%4]]+"_");
                 call(faceToNotation[color]);
                 call(faceToNotation[directions[5][(findIndex(directions[5],color)+1)%4]]);
@@ -306,7 +312,7 @@ public class RubikFROOK {
               }
               call(faceToNotation[color]);
               call(faceToNotation[color]);
-              U_();
+              call("U_");
               call(faceToNotation[directions[5][(findIndex(directions[5],color)+5)%4]]+"_");
               call(faceToNotation[color]);
               call(faceToNotation[directions[5][(findIndex(directions[5],color)+5)%4]]);
@@ -314,7 +320,7 @@ public class RubikFROOK {
             }
             //direction = 0,2
             call(faceToNotation[latSide]+((direction>1)?"":"_"));
-            System.out.println(findIndex(directions[0],color)+" "+findIndex(directions[0],latSide));
+            unimportantPrint(findIndex(directions[0],color)+" "+findIndex(directions[0],latSide));
             rotateTo(findIndex(directions[0],color)+((color==1?4:0)),findIndex(directions[0],latSide),"U");
             call(faceToNotation[latSide]+((direction<1)?"":"_"));
             call(faceToNotation[color]);call(faceToNotation[color]);
@@ -330,9 +336,8 @@ public class RubikFROOK {
         if(rubik[i][j]==5){
           int latSide = directions[5][(findIndex(directions[5],i)+((j>3)?1:-1)+4)%4];
           int color = rubik[latSide][6-j];
-          System.out.println("\nCorner found. lat side: "+latSide+" color: "+color+" j: "+j+"\n");
+          unimportantPrint("Corner found. lat side: "+latSide+" color: "+color+" j: "+j);
           if(j==0||j==6){
-            System.out.println("low level");
             call(faceToNotation[i]+((j<3)?"":"_"));
             call("U"+((j<3)?"":"_"));
             call(faceToNotation[i]+((j<3)?"_":""));
@@ -340,9 +345,7 @@ public class RubikFROOK {
             return;
           }
           else{
-            System.out.println("high level");
             int newSide = directions[5][(findIndex(directions[5],color)+((j>3)?-1:1)+4)%4];
-            System.out.println("newSide "+newSide);
             rotateTo(findIndex(directions[5],latSide),findIndex(directions[5],color),"U");
             call(faceToNotation[newSide]+((j>3)?"_":""));
             call("U"+((j>3)?"_":""));
@@ -358,7 +361,7 @@ public class RubikFROOK {
     //yellow side
     for(int j=0;j<8;j+=2){
       if(rubik[0][j]==5){
-        System.out.println("yellow "+j);
+        unimportantPrint("yellow "+j);
         int side = (new int[]{3,1,2,4})[Math.round(j/2)];
         for(int k=0;k<8;k++){
           if(rubik[5][k]!=5){
@@ -368,7 +371,7 @@ public class RubikFROOK {
           }
         }
         call(faceToNotation[side]);
-        U();U();
+        call("U");call("U");
         call(faceToNotation[side]+"_");
       }
     }
@@ -381,7 +384,7 @@ public class RubikFROOK {
       if(rubik[side][2]!=side){
         String turn = faceToNotation[rubik[5-side][2]];
         call(turn);
-        U();
+        call("U");
         call(turn+"_");
         return;
       }
@@ -397,28 +400,26 @@ public class RubikFROOK {
           hasEdge = true;
           int top=rubik[0][j];
           int bottom=rubik[latSide][3];
-          System.out.println("Edge found. latSide: "+latSide+" top: "+top+" bottom: "+bottom+" "+findIndex(directions[5],top)+" "+findIndex(directions[5],bottom));
+          unimportantPrint("Edge found. latSide: "+latSide+" top: "+top+" bottom: "+bottom+" "+findIndex(directions[5],top)+" "+findIndex(directions[5],bottom));
           if(directions[5][(findIndex(directions[5],top)+2)%4]!=latSide){
             rotateTo(findIndex(directions[0],5-top),findIndex(directions[0],latSide),"U");
           }
           if(findIndex(directions[5],top)<findIndex(directions[5],bottom)&&(top!=1||bottom!=3)||(top==3&&bottom==1)){
-            System.out.println("gg");
             call(faceToNotation[top]+"_");
-            U_();
+            call("U_");
             call(faceToNotation[top]);
-            U();
+            call("U");
             call(faceToNotation[bottom]);
-            U();
+            call("U");
             call(faceToNotation[bottom]+"_");
           }
           else{
-            System.out.println("g");
             call(faceToNotation[top]);
-            U();
+            call("U");
             call(faceToNotation[top]+"_");
-            U_();
+            call("U_");
             call(faceToNotation[bottom]+"_");
-            U_();
+            call("U_");
             call(faceToNotation[bottom]);
           }
           
@@ -426,20 +427,20 @@ public class RubikFROOK {
       }
     }
     if(!hasEdge){
-      System.out.println("no edges");
+      unimportantPrint("no edges");
       for(int side=1;side<5;side++){
         int color = rubik[side][1];
         if(color!=0&&color!=side){
           int latSide = directions[5][(findIndex(directions[5],side)+3)%4];
           int latColor = rubik[latSide][5];
           if(latColor!=0&&(color!=side||latSide!=latColor)){
-            System.out.println("wrong edge. side: "+side+" latSide: "+latSide+" color: "+color+" latColor: "+latColor);
+            unimportantPrint("wrong edge. side: "+side+" latSide: "+latSide+" color: "+color+" latColor: "+latColor);
             call(faceToNotation[side]);
-            U();
+            call("U");
             call(faceToNotation[side]+"_");
-            U_();
+            call("U_");
             call(faceToNotation[latSide]+"_");
-            U_();
+            call("U_");
             call(faceToNotation[latSide]);
           }
         }
@@ -448,7 +449,7 @@ public class RubikFROOK {
   }
 
   private void OLL(){
-    System.out.println("OLL");
+    // System.out.println("OLL");
     ArrayList<Integer> yellowEdgeList = new ArrayList<Integer>();
     ArrayList<Integer> yellowCornerList = new ArrayList<Integer>();
     for(int j=1;j<8;j+=2){
@@ -457,12 +458,12 @@ public class RubikFROOK {
       }
     }
     if(yellowEdgeList.size()==0){
-      F();
-      R();
-      U();
-      R_();
-      U_();
-      F_();
+      call("F");
+      call("R");
+      call("U");
+      call("R_");
+      call("U_");
+      call("F_");
       return;
     }
     
@@ -471,9 +472,9 @@ public class RubikFROOK {
         int side = directions[0][(yellowEdgeList.get(0)-1+4)%4];
         int latSide = 5-directions[0][yellowEdgeList.get(0)];
         call(faceToNotation[side]);
-        U();
+        call("U");
         call(faceToNotation[latSide]);
-        U_();
+        call("U_");
         call(faceToNotation[latSide]+"_");
         call(faceToNotation[side]+"_");
       }
@@ -482,9 +483,9 @@ public class RubikFROOK {
         int leftSide = directions[0][(maxDirection+1)%4];
         int side = directions[0][maxDirection];
         call(faceToNotation[leftSide]);
-        U();
+        call("U");
         call(faceToNotation[side]);
-        U_();
+        call("U_");
         call(faceToNotation[side]+"_");
         call(faceToNotation[leftSide]+"_");
       }
@@ -500,19 +501,18 @@ public class RubikFROOK {
     if(yellowCornerList.size()==0){
       for(int side=1;side<5;side++){
         if(rubik[side][2]==0&&rubik[side][4]==0){
-          System.out.println(5-side);
           // int direction = findIndex(directions[0],side);
           if(rubik[5-side][2]==0&&rubik[5-side][4]==0){
             call(faceToNotation[side]);
-            U();
+            call("U");
             call(faceToNotation[side]+"_");
-            U();
+            call("U");
             call(faceToNotation[side]);
-            U_();
+            call("U_");
             call(faceToNotation[side]+"_");
-            U();
+            call("U");
             call(faceToNotation[side]);
-            U();U();
+            call("U");call("U");
             call(faceToNotation[side]+"_");
             return;
           }
@@ -520,16 +520,16 @@ public class RubikFROOK {
             int oppositeSide = 5-side;
             String oppositeFace=faceToNotation[oppositeSide];
             call(oppositeFace);
-            U();U();
+            call("U");call("U");
             call(oppositeFace);
             call(oppositeFace);
-            U_();
+            call("U_");
             call(oppositeFace);
             call(oppositeFace);
-            U_();
+            call("U_");
             call(oppositeFace);
             call(oppositeFace);
-            U();U();
+            call("U");call("U");
             call(oppositeFace);
           }
         }
@@ -540,23 +540,22 @@ public class RubikFROOK {
       //System.out.println(side);
       if(rubik[side][4]==0){
         int latSide = directions[0][(Math.round(yellowCornerList.get(0)/2)+2)%4];
-        System.out.println(latSide);
         call(faceToNotation[latSide]);
-        U();
+        call("U");
         call(faceToNotation[latSide]+"_");
-        U();
+        call("U");
         call(faceToNotation[latSide]);
-        U();U();
+        call("U");call("U");
         call(faceToNotation[latSide]+"_");
         return;
       }
       int latSide = directions[0][(Math.round(yellowCornerList.get(0)/2)+1)%4];
       call(faceToNotation[latSide]+"_");
-      U_();
+      call("U_");
       call(faceToNotation[latSide]);
-      U_();
+      call("U_");
       call(faceToNotation[latSide]+"_");
-      U();U();
+      call("U");call("U");
       call(faceToNotation[latSide]);
       return;
     }
@@ -572,7 +571,6 @@ public class RubikFROOK {
           rightSide = directions[0][(direction2+1)%4];
           leftSide = directions[0][(direction2+3)%4];
         }
-        System.out.println(side+" "+rightSide);
         String rightFace=faceToNotation[rightSide];
         call(faceToNotation[side]);
         call(rightFace+"_");
@@ -588,7 +586,6 @@ public class RubikFROOK {
       int side = directions[0][(4-Math.min(yellowCornerList.get(0),yellowCornerList.get(1)))%4];
       int oppositeSide = 5-side;
       int rightSide = directions[0][(4-Math.min(yellowCornerList.get(0),yellowCornerList.get(1))+3)%4];
-      System.out.println("side "+side);
       String oppositeFace=faceToNotation[oppositeSide];
       String rightFace=faceToNotation[rightSide];
       call(faceToNotation[side]);
@@ -603,7 +600,7 @@ public class RubikFROOK {
   }
 
   private void PLL(){
-    System.out.println("PLL");
+    // System.out.println("PLL");
     for(int side=1;side<5;side++){
       if(rubik[side][2]==rubik[side][4]){
         int leftSide = directions[5][(findIndex(directions[5],side)-1+4)%4];
@@ -619,60 +616,60 @@ public class RubikFROOK {
           }
           String turn = faceToNotation[rightSide];
           if(rubik[rightSide][2]==rubik[side][3]){
-            call(turn);U_();
-            call(turn);U();
-            call(turn);U();
-            call(turn);U_();
-            call(turn+"_");U_();
+            call(turn);call("U_");
+            call(turn);call("U");
+            call(turn);call("U");
+            call(turn);call("U_");
+            call(turn+"_");call("U_");
             call(turn);call(turn);
             return;
           }
           call(turn);call(turn);
-          U();call(turn);
-          U();call(turn+"_");
-          U_();call(turn+"_");
-          U_();call(turn+"_");
-          U();call(turn+"_");
+          call("U");call(turn);
+          call("U");call(turn+"_");
+          call("U_");call(turn+"_");
+          call("U_");call(turn+"_");
+          call("U");call(turn+"_");
           return;
         }
         int oppositeSide = 5-side;
         String oppositeFace=faceToNotation[oppositeSide];
         String rightFace=faceToNotation[rightSide];
         call(oppositeFace);
-        U();
+        call("U");
         call(oppositeFace+"_");
-        U_();
+        call("U_");
         call(oppositeFace+"_");
         call(rightFace);
         call(oppositeFace);call(oppositeFace);
-        U_();
+        call("U_");
         call(oppositeFace+"_");
-        U_();
+        call("U_");
         call(oppositeFace);
-        U();
+        call("U");
         call(oppositeFace+"_");
         call(rightFace+"_");
         return;
       }
     }
     // no perfect corner
-    F();
-    R();
-    U_();
-    R_();
-    U_();
-    R();
-    U();
-    R_();
-    F_();
-    R();
-    U();
-    R_();
-    U_();
-    R_();
-    F();
-    R();
-    F_();
+    call("F");
+    call("R");
+    call("U_");
+    call("R_");
+    call("U_");
+    call("R");
+    call("U");
+    call("R_");
+    call("F_");
+    call("R");
+    call("U");
+    call("R_");
+    call("U_");
+    call("R_");
+    call("F");
+    call("R");
+    call("F_");
     return;
   }
 
@@ -732,52 +729,66 @@ public class RubikFROOK {
 
   private ArrayList<String> solution = new ArrayList<String>();
 
+  private void unimportantPrint(String message){
+    if(detailPrint){
+      System.out.println(message);
+    }
+  }
+
   private void solve(){
     while(!checkCross()){
       cross();
     }
-    System.out.println("\n"+"finish cross "+solution.size()+"\n");
+    unimportantPrint("\n"+"finish cross "+solution.size()+"\n");
     while(!checkCorner()){
       corner();
     }
-    System.out.println("\n"+"finish corner "+solution.size()+"\n");
+    unimportantPrint("\n"+"finish corner "+solution.size()+"\n");
     while(!checkEdge()){
       edge();
     }
-    System.out.println("\n"+"finish edge "+solution.size()+"\n");
+    unimportantPrint("\n"+"finish edge "+solution.size()+"\n");
     while(!checkOLL()){
       OLL();
     }
-    System.out.println("\n"+"finish OLL "+solution.size()+"\n");
+    unimportantPrint("\n"+"finish OLL "+solution.size()+"\n");
     while(!checkPLL()){
       PLL();
     }
-    System.out.println("\n"+"finish PLL "+solution.size()+"\n");
+    unimportantPrint("\n"+"finish PLL "+solution.size()+"\n");
   }
+
   
-  public void mainSolving(){
+  
+  public void mainSolving(String[] scrambles){
     rubik = new int[6][8];
     //generate rubik
     for(int i=0;i<6;i++){
       rubik[i]=new int[8];
       Arrays.fill(rubik[i],i);
     }
-    printRubik(rubik);
+    if(detailPrint){
+      printRubik(rubik);
+    }
     
-    String scramble = "";
+    // String scramble = "";
 
     /*for(String scramble: "B U U B F R U U R R U U L B U U L L F U R B R B U L B F B B R U B U B U L B R L U R U F F R F L U U U B R U R B R F U U F F U U F B B U U B F R B F R F U B U U B L F B B B U F L F L R R U B B U F B F F L L B F B R U B U R L F B L F R U R U B F U F R U F R B F B L U L R L L B B F B U U U B R R R U U U F L B B U U L B B B L F L L L U U U B U U L R L U U U L B F L R U U R B B R F B F F B B R L L L R R B B F L L L F L R U B L L B U L F B U L U U U F U B L U U B B L F R F L U B U B R R B F F L L L R F L R B B L F F U B B B U R R B U L R L F R F R R L L B L B L U U R B L L L U R L R R L F L F U L B B U L U B R U R L F F F B L L B R R U B R F U F L F U F F F L B U F L F U U U L B F L L L L U B L U U L B B U U B U R U F R L F B B B B F B R R U B F L B B L U L L B F B L L R R F L L L L F L U B R F R L U L F L U F L U L U L B F F F F F L L L L R B F B U R R F U F L R B R B R B U L L L F U U L F F F U B B U L R B F F U L F B B F F F F U U F L U B L B F B U U R B F R U F U U B R B B L R F U F L R".split(" ")){
       call(scramble);
     }*/
-    
-    Scanner systemIn = new Scanner(System.in);
-    int numOfScrambles=Integer.valueOf(systemIn.next());
-    for(int i=0;i<numOfScrambles;i++){
-      String inputScramble=systemIn.next();
-      scramble+=inputScramble+" ";
-      call(inputScramble);
+
+    for(String scramble:scrambles){
+      call(scramble,true);
     }
-    systemIn.close();
+    
+    // Scanner systemIn = new Scanner(System.in);
+    // int numOfScrambles=Integer.valueOf(systemIn.next());
+    // for(int i=0;i<numOfScrambles;i++){
+    //   String inputScramble=systemIn.next();
+    //   scramble+=inputScramble+" ";
+    //   call(inputScramble);
+    // }
+    // systemIn.close();
 
     // for(int time=0;time<10;time++){
     //   String random = (new String[]{"U","R","L","F","D","B","U_","R_","L_","F_","D_","B_"})[(int) (Math.random()*5)];
@@ -785,13 +796,13 @@ public class RubikFROOK {
     //   string+=random+" ";
     // }
     
-    System.out.println("\nStarting Solving\n");
+    // System.out.println("\nStarting Solving\n");
     
     solve();
-    System.out.println("scrambles: "+scramble);
-    System.out.println("solution: "+String.join(", ",solution));
-    System.out.println("solution moves: "+solution.size());
-    
+    System.out.println("scrambles: "+String.join(", ",scrambles));
+    unimportantPrint("solution: "+String.join(", ",solution));
+    unimportantPrint("solution moves: "+solution.size());
+    unimportantPrint("After cancellation");
     // int i=0;
     // while(i<solution.size()-1){
     for(int i=0;i<solution.size()-1;i++){
@@ -800,7 +811,7 @@ public class RubikFROOK {
       // if current and next cancels out
       if(currentMove.charAt(0)==nextMove.charAt(0)){
         if(currentMove.length()!=nextMove.length()){
-          System.out.println("cancel "+currentMove);
+          unimportantPrint("cancel "+currentMove);
           solution.remove(i);
           solution.remove(i);
         }
@@ -811,13 +822,13 @@ public class RubikFROOK {
       }
       String afterNextMove = solution.get(i+2);
       if(currentMove==nextMove&&nextMove==afterNextMove){
-        System.out.println("replace "+currentMove);
+        unimportantPrint("replace "+currentMove);
         solution.remove(i);
         solution.remove(i);
         solution.remove(i);
         if(i<solution.size()-3){
           if(solution.get(i)==currentMove){
-            System.out.println("remove "+currentMove);
+            unimportantPrint("remove "+currentMove);
             solution.remove(i);
             continue;
           }

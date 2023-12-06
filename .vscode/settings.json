@@ -1,10 +1,11 @@
 {
     "code-runner.executorMap": {
         // "java": "cd '$workspaceRoot' && javac -cp src:lib lib/*.java src/$fileName -d bin -encoding ISO-8859-1 && java -cp '$workspaceRoot/bin' $fileNameWithoutExt"
-        "java": "cd '$workspaceRoot' && javac -cp src:lib lib/*.java src/*.java src/$fileName -d bin -encoding ISO-8859-1 && java -cp '$workspaceRoot/bin' src.Main"
+        "java": "cd '$workspaceRoot' && javac -cp src:lib lib/*.java src/*.java -d bin -encoding ISO-8859-1 && jar cfmv build/run.jar META-INF/MANIFEST.MF -C bin . && java -cp '$workspaceRoot/bin' src.run"
     },
     "java.project.sourcePaths": [
         "."
     ],
-    "java.dependency.packagePresentation": "hierarchical"
+    "java.dependency.packagePresentation": "hierarchical",
+    "java.project.exportJar.targetPath": "${workspaceFolder}/build/run.jar"
 }
