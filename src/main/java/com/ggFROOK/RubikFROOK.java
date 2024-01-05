@@ -1,7 +1,5 @@
 package com.ggFROOK;
 
-import static com.ggFROOK.run.countMovesOption;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
