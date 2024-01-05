@@ -2,6 +2,7 @@ Name "rubikFROOK"
 !verbose 4
 Page directory
 Page instfiles
+RequestExecutionLevel admin 
 
 Section "Installer Section"
     ; MessageBox MB_OK $INSTDIR
@@ -14,7 +15,9 @@ Section "Installer Section"
         Quit
     ok:
     Delete $INSTDIR\rubikFROOKmain.zip
-    Rename "$INSTDIR\3x3-rubik-solver-hardcoded-main" "$INSTDIR\rubikFROOK"
+
+    ; Rename "$INSTDIR\rubikFROOK-3x3-solver-main\*" "$INSTDIR\rubikFROOK\*"
+    System::Call 'KERNEL32::MoveFile(t "I:\gg\rubikFROOK-3x3-solver-main", t "I:\gg\rubikFROOK") i .r0'
     EnVar::AddValue "Path" "$INSTDIR\rubikFROOK\scripts"
 
 SectionEnd
