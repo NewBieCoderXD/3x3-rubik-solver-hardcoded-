@@ -1,6 +1,6 @@
 #!/bin/bash
-# echo $(dirname "$0")
+
 # java -cp $(dirname "$0") rubikFROOK
 # cd $(dirname "${BASH_SOURCE[0]}")
 # ls -l
-java -jar $(dirname $(realpath $0))/../build/run.jar $@
+java -jar $(dirname $(realpath $0))/../build/rubikFROOK.jar $@

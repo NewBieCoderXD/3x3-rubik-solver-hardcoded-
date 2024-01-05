@@ -1,11 +1,15 @@
 {
     "code-runner.executorMap": {
         // "java": "cd '$workspaceRoot' && javac -cp src:lib lib/*.java src/$fileName -d bin -encoding ISO-8859-1 && java -cp '$workspaceRoot/bin' $fileNameWithoutExt"
-        "java": "cd '$workspaceRoot' && javac -cp src:lib lib/*.java src/*.java -d bin -encoding ISO-8859-1 && jar cfmv build/run.jar META-INF/MANIFEST.MF -C bin . && java -cp '$workspaceRoot/bin' src.run"
+        // "java": "cd '$workspaceRoot' && javac -cp src:lib lib/*.java src/**/**/**/*.java -d bin -encoding ISO-8859-1 && jar cfmv build/run.jar META-INF/MANIFEST.MF -C bin . && java -cp '$workspaceRoot/bin' src.run"
+        // "java": "cd '$workspaceRoot' && mvn compile assembly:single && java -jar ./build/rubikFROOK.jar U B #"
+        "java": "cd '$workspaceRoot' && mvn compile assembly:single"
+        // "java":"echo gg #"
     },
     "java.project.sourcePaths": [
-        "."
+        "src"
     ],
     "java.dependency.packagePresentation": "hierarchical",
-    "java.project.exportJar.targetPath": "${workspaceFolder}/build/run.jar"
+    "java.project.exportJar.targetPath": "${workspaceFolder}/build/run.jar",
+    "java.configuration.updateBuildConfiguration": "automatic"
 }

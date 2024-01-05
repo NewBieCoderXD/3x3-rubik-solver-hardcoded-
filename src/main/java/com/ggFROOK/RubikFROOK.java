@@ -1,15 +1,10 @@
-package src;
+package com.ggFROOK;
 
-import java.util.Scanner;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Properties;
-import java.util.HashMap;
 
-import lib.Pair;
+import so.dang.cool.Pair;
 
 public class RubikFROOK {
   private final int[][] directions = new int[][]{
@@ -28,8 +23,6 @@ public class RubikFROOK {
     "B"
   };
   public int[][] rubik;
-
-  public boolean detailPrint=false;
   
   private int findIndex(int[] list, int value) {
     for (int i = 0; i < list.length; i++) {
@@ -84,78 +77,6 @@ public class RubikFROOK {
   private void addToSolution(String s){
     solution.add(s);
   }
-  // public void call("R"){
-  //   rotateClockwise(1,1);
-  //   System.out.println("R");
-  //   addToSolution("R");
-  //   printRubik(rubik);
-  // }
-  // public void L(){
-  //   rotateClockwise(1,-1);
-  //   System.out.println("L");
-  //   addToSolution("L");
-  //   printRubik(rubik);
-  // }
-  // public void call("U"){
-  //   rotateClockwise(1,0);
-  //   System.out.println("U");
-  //   addToSolution("U");
-  //   printRubik(rubik);
-  // }
-  // public void D(){
-  //   rotateClockwise(1,2);
-  //   System.out.println("D");
-  //   addToSolution("D");
-  //   printRubik(rubik);
-  // }
-  // public void call("F"){
-  //   rotateClockwise(3,1);
-  //   System.out.println("F");
-  //   addToSolution("F");
-  //   printRubik(rubik);
-  // }
-  // public void B(){
-  //   rotateClockwise(3,3);
-  //   System.out.println("B");
-  //   addToSolution("B");
-  //   printRubik(rubik);
-  // }
-  // public void call("R_"){
-  //   rotateAntiClockwise(1,1);
-  //   System.out.println("R'");
-  //   addToSolution("R'");
-  //   printRubik(rubik);
-  // }
-  // public void L_(){
-  //   rotateAntiClockwise(1,-1);
-  //   System.out.println("L'");
-  //   addToSolution("L'");
-  //   printRubik(rubik);
-  // }
-  // public void call("U_"){
-  //   rotateAntiClockwise(1,0);
-  //   System.out.println("U'");
-  //   addToSolution("U'");
-  //   printRubik(rubik);
-  // }
-  // public void D_(){
-  //   rotateAntiClockwise(1,2);
-  //   System.out.println("D'");
-  //   addToSolution("D'");
-  //   printRubik(rubik);
-  // }
-  // public void call("F_"){
-  //   rotateAntiClockwise(3,1);
-  //   System.out.println("F'");
-  //   addToSolution("F'");
-  //   printRubik(rubik);
-  // }
-  // public void B_(){
-  //   rotateAntiClockwise(3,3);
-  //   System.out.println("B'");
-  //   addToSolution("B'");
-  //   printRubik(rubik);
-  // }
 
   private boolean IsClockwiseNotation(String notation){
     return notation.length()==1;
@@ -174,80 +95,47 @@ public class RubikFROOK {
     "F", new Pair<>(3,1),
     "B", new Pair<>(3,3)
   );
-  private void call(String methodName){
+
+  private class InvalidRubikNotation extends Exception{
+    public InvalidRubikNotation(String errorMessage){
+      super(errorMessage);
+    }
+  }
+
+  private void call(String methodName) throws InvalidRubikNotation{
     call(methodName,false);
   }
-  private void call(String methodName, boolean IsScramble){ //default value is false
+  private void call(String methodName, boolean IsScramble) throws InvalidRubikNotation{ //default value is false
+    String errorMessage = String.format("'%s' is not valid notation",methodName);
     if(IsClockwiseNotation(methodName)){
       Pair<Integer,Integer> faceAndDir=faceAndDirOfNotation.get(methodName);
       if(faceAndDir==null){
-        throwError(methodName+" is not valid notation");
+        throw new InvalidRubikNotation(errorMessage);
       }
-      rotateClockwise(faceAndDir.getFirst(), faceAndDir.getSecond());
+      rotateClockwise(faceAndDir.getLeft(), faceAndDir.getRight());
     }
     else{
       if(methodName.charAt(1)!='_'&&methodName.charAt(1)!='\''){
-        throwError(methodName+" is not valid notation");
+        throwError(errorMessage);
       }
       // change R_ to R'
       methodName=methodName.charAt(0)+"'";
       Pair<Integer,Integer> faceAndDir=faceAndDirOfNotation.get(methodName.charAt(0)+"");
       if(faceAndDir==null){
-        throwError(methodName+" is not valid notation");
+        throwError(errorMessage);
       }
-      rotateAntiClockwise(faceAndDir.getFirst(), faceAndDir.getSecond());
+      rotateAntiClockwise(faceAndDir.getLeft(), faceAndDir.getRight());
     }
     if(!IsScramble){
       addToSolution(methodName);
     }
     unimportantPrint(methodName);
-    if(detailPrint){
+    if(run.detailPrintOption){
       printRubik(rubik);
     }
-    // switch(methodName){
-    //   case "R":
-    //     call("R");
-    //     break;
-    //   case "U":
-    //     call("U");
-    //     break;
-    //   case "L":
-    //     L();
-    //     break;
-    //   case "D":
-    //     D();
-    //     break;
-    //   case "F":
-    //     call("F");
-    //     break;
-    //   case "B":
-    //     B();
-    //     break;
-    //   case "R_":
-    //     call("R_");
-    //     break;
-    //   case "U_":
-    //     call("U_");
-    //     break;
-    //   case "L_":
-    //     L_();
-    //     break;
-    //   case "D_":
-    //     D_();
-    //     break;
-    //   case "F_":
-    //     call("F_");
-    //     break;
-    //   case "B_":
-    //     B_();
-    //     break;
-    //   default:
-    //     System.out.println("error, no command: "+methodName);
-    //     System.exit(1);
-    // }
   }
 
-  private void rotateTo(int side,int targetSide,String action){
+  private void rotateTo(int side,int targetSide,String action) throws InvalidRubikNotation{
     int turns=side-targetSide;
     if(turns==0){
       return;
@@ -266,7 +154,7 @@ public class RubikFROOK {
     }
   }
 
-  private void cross(){
+  private void cross() throws InvalidRubikNotation{
     for(int i=0;i<6;i++){
       for(int j=1;j<8;j+=2){
         if(rubik[i][j]==5){
@@ -330,7 +218,7 @@ public class RubikFROOK {
     }
   }
 
-  private void corner(){
+  private void corner() throws InvalidRubikNotation{
     for(int i=1;i<5;i++){
       for(int j=0;j<7;j+=2){
         if(rubik[i][j]==5){
@@ -391,7 +279,7 @@ public class RubikFROOK {
     }
   }
   
-  private void edge(){
+  private void edge() throws InvalidRubikNotation{
     boolean hasEdge = false;
     for(int j=1;j<8;j+=2){
       if(rubik[0][j]!=0){
@@ -448,7 +336,7 @@ public class RubikFROOK {
     }
   }
 
-  private void OLL(){
+  private void OLL() throws InvalidRubikNotation{
     // System.out.println("OLL");
     ArrayList<Integer> yellowEdgeList = new ArrayList<Integer>();
     ArrayList<Integer> yellowCornerList = new ArrayList<Integer>();
@@ -599,7 +487,7 @@ public class RubikFROOK {
     }
   }
 
-  private void PLL(){
+  private void PLL() throws InvalidRubikNotation{
     // System.out.println("PLL");
     for(int side=1;side<5;side++){
       if(rubik[side][2]==rubik[side][4]){
@@ -730,12 +618,12 @@ public class RubikFROOK {
   private ArrayList<String> solution = new ArrayList<String>();
 
   private void unimportantPrint(String message){
-    if(detailPrint){
+    if(run.detailPrintOption){
       System.out.println(message);
     }
   }
 
-  private void solve(){
+  private void solve() throws InvalidRubikNotation{
     while(!checkCross()){
       cross();
     }
@@ -761,89 +649,97 @@ public class RubikFROOK {
   
   
   public void mainSolving(String[] scrambles){
-    rubik = new int[6][8];
-    //generate rubik
-    for(int i=0;i<6;i++){
-      rubik[i]=new int[8];
-      Arrays.fill(rubik[i],i);
-    }
-    if(detailPrint){
-      printRubik(rubik);
-    }
-    
-    // String scramble = "";
-
-    /*for(String scramble: "B U U B F R U U R R U U L B U U L L F U R B R B U L B F B B R U B U B U L B R L U R U F F R F L U U U B R U R B R F U U F F U U F B B U U B F R B F R F U B U U B L F B B B U F L F L R R U B B U F B F F L L B F B R U B U R L F B L F R U R U B F U F R U F R B F B L U L R L L B B F B U U U B R R R U U U F L B B U U L B B B L F L L L U U U B U U L R L U U U L B F L R U U R B B R F B F F B B R L L L R R B B F L L L F L R U B L L B U L F B U L U U U F U B L U U B B L F R F L U B U B R R B F F L L L R F L R B B L F F U B B B U R R B U L R L F R F R R L L B L B L U U R B L L L U R L R R L F L F U L B B U L U B R U R L F F F B L L B R R U B R F U F L F U F F F L B U F L F U U U L B F L L L L U B L U U L B B U U B U R U F R L F B B B B F B R R U B F L B B L U L L B F B L L R R F L L L L F L U B R F R L U L F L U F L U L U L B F F F F F L L L L R B F B U R R F U F L R B R B R B U L L L F U U L F F F U B B U L R B F F U L F B B F F F F U U F L U B L B F B U U R B F R U F U U B R B B L R F U F L R".split(" ")){
-      call(scramble);
-    }*/
-
-    for(String scramble:scrambles){
-      call(scramble,true);
-    }
-    
-    // Scanner systemIn = new Scanner(System.in);
-    // int numOfScrambles=Integer.valueOf(systemIn.next());
-    // for(int i=0;i<numOfScrambles;i++){
-    //   String inputScramble=systemIn.next();
-    //   scramble+=inputScramble+" ";
-    //   call(inputScramble);
-    // }
-    // systemIn.close();
-
-    // for(int time=0;time<10;time++){
-    //   String random = (new String[]{"U","R","L","F","D","B","U_","R_","L_","F_","D_","B_"})[(int) (Math.random()*5)];
-    //   call(random);
-    //   string+=random+" ";
-    // }
-    
-    // System.out.println("\nStarting Solving\n");
-    
-    solve();
-    System.out.println("scrambles: "+String.join(", ",scrambles));
-    unimportantPrint("solution: "+String.join(", ",solution));
-    unimportantPrint("solution moves: "+solution.size());
-    unimportantPrint("After cancellation");
-    // int i=0;
-    // while(i<solution.size()-1){
-    for(int i=0;i<solution.size()-1;i++){
-      String currentMove = solution.get(i);
-      String nextMove = solution.get(i+1);
-      // if current and next cancels out
-      if(currentMove.charAt(0)==nextMove.charAt(0)){
-        if(currentMove.length()!=nextMove.length()){
-          unimportantPrint("cancel "+currentMove);
-          solution.remove(i);
-          solution.remove(i);
-        }
+    try{
+      rubik = new int[6][8];
+      //generate rubik
+      for(int i=0;i<6;i++){
+        rubik[i]=new int[8];
+        Arrays.fill(rubik[i],i);
       }
-      // if there is double next
-      if(solution.size()-i<3){
-        continue;
+      unimportantPrintRubik(rubik);
+
+      for(String scramble:scrambles){
+        call(scramble,true);
       }
-      String afterNextMove = solution.get(i+2);
-      if(currentMove==nextMove&&nextMove==afterNextMove){
-        unimportantPrint("replace "+currentMove);
-        solution.remove(i);
-        solution.remove(i);
-        solution.remove(i);
-        if(i<solution.size()-3){
-          if(solution.get(i)==currentMove){
-            unimportantPrint("remove "+currentMove);
+      
+      // Scanner systemIn = new Scanner(System.in);
+      // int numOfScrambles=Integer.valueOf(systemIn.next());
+      // for(int i=0;i<numOfScrambles;i++){
+      //   String inputScramble=systemIn.next();
+      //   scramble+=inputScramble+" ";
+      //   call(inputScramble);
+      // }
+      // systemIn.close();
+
+      // for(int time=0;time<10;time++){
+      //   String random = (new String[]{"U","R","L","F","D","B","U_","R_","L_","F_","D_","B_"})[(int) (Math.random()*5)];
+      //   call(random);
+      //   string+=random+" ";
+      // }
+      
+      // System.out.println("\nStarting Solving\n");
+      try{
+        solve();
+      }
+      catch(InvalidRubikNotation e){
+        System.out.println("given rubik notations are valid\n"+
+        "\tavailible scrambles: U D R L F B U' D' R' L' F' B'");
+        System.exit(1);
+      }
+      System.out.println("scrambles: "+String.join(", ",scrambles));
+      unimportantPrint("solution: "+String.join(", ",solution));
+      unimportantPrint("solution moves: "+solution.size());
+      unimportantPrint("After cancellation");
+      // int i=0;
+      // while(i<solution.size()-1){
+      for(int i=0;i<solution.size()-1;i++){
+        String currentMove = solution.get(i);
+        String nextMove = solution.get(i+1);
+        // if current and next cancels out
+        if(currentMove.charAt(0)==nextMove.charAt(0)){
+          if(currentMove.length()!=nextMove.length()){
+            unimportantPrint("cancel "+currentMove);
             solution.remove(i);
-            continue;
+            solution.remove(i);
           }
         }
-        // is clockwise
-        if(currentMove.length()>1){
-          solution.add(i,Character.toString(currentMove.charAt(0)));
+        // if there is double next
+        if(solution.size()-i<3){
+          continue;
         }
-        else{
-          solution.add(i,currentMove+"'");
+        String afterNextMove = solution.get(i+2);
+        if(currentMove==nextMove&&nextMove==afterNextMove){
+          unimportantPrint("replace "+currentMove);
+          solution.remove(i);
+          solution.remove(i);
+          solution.remove(i);
+          if(i<solution.size()-3){
+            if(solution.get(i)==currentMove){
+              unimportantPrint("remove "+currentMove);
+              solution.remove(i);
+              continue;
+            }
+          }
+          // is clockwise
+          if(currentMove.length()>1){
+            solution.add(i,Character.toString(currentMove.charAt(0)));
+          }
+          else{
+            solution.add(i,currentMove+"'");
+          }
         }
       }
+      System.out.println("solution: "+String.join(", ",solution));
+      System.out.println("solution moves: "+solution.size());
     }
-    System.out.println("solution: "+String.join(", ",solution));
-    System.out.println("solution moves: "+solution.size());
+    catch(NullPointerException e){
+      System.out.println("no scrambles taken\n"+
+      "\trubikFROOK [-h -v -d] [scrambles]\n"+
+      "\tavailible scrambles: U D R L F B U' D' R' L' F' B'");
+    }
+    catch(InvalidRubikNotation e){
+      System.out.println("Internal Error, please report a bug");
+    }
   }
   protected void printRubik(int[][] rubik){
     System.out.println("      "+rubik[1][2]+" "+rubik[1][3]+" "+rubik[1][4]);
@@ -870,5 +766,10 @@ public class RubikFROOK {
     System.out.println("      "+rubik[4][6]+" "+rubik[4][7]+" "+rubik[4][0]);
     System.out.println("      "+rubik[4][5]+" 4 "+rubik[4][1]);
     System.out.println("      "+rubik[4][4]+" "+rubik[4][3]+" "+rubik[4][2]);
+  }
+  private void unimportantPrintRubik(int[][] rubik){
+    if(run.detailPrintOption){
+      printRubik(rubik);
+    }
   }
 }
