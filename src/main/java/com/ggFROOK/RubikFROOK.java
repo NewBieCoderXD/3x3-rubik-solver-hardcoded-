@@ -1,5 +1,7 @@
 package com.ggFROOK;
 
+import static com.ggFROOK.run.countMovesOption;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
@@ -686,7 +688,8 @@ public class RubikFROOK {
         "\tavailible scrambles: U D R L F B U' D' R' L' F' B'");
         System.exit(1);
       }
-      System.out.println("scrambles: "+String.join(", ",scrambles));
+
+      // System.out.println("scrambles: "+String.join(", ",scrambles));
       unimportantPrint("solution: "+String.join(", ",solution));
       unimportantPrint("solution moves: "+solution.size());
       unimportantPrint("After cancellation");
@@ -730,12 +733,14 @@ public class RubikFROOK {
         }
       }
       System.out.println("solution: "+String.join(", ",solution));
-      System.out.println("solution moves: "+solution.size());
+      if(run.countMovesOption){
+        System.out.println("solution moves: "+solution.size());
+      }
     }
     catch(NullPointerException e){
-      System.out.println("no scrambles taken\n"+
-      "\trubikFROOK [-h -v -d] [scrambles]\n"+
-      "\tavailible scrambles: U D R L F B U' D' R' L' F' B'");
+      System.out.println("No scrambles taken\n"+
+      "\tAvailible scrambles: U D R L F B U_ D_ R_ L_ F_ B_\n"+
+      "For command usage: rubikFROOK --help");
     }
     catch(InvalidRubikNotation e){
       System.out.println("Internal Error, please report a bug");
