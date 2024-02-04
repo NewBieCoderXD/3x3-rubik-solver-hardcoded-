@@ -1,5 +1,5 @@
 @echo off
 pushd %~dp0
 cd ../build
-java -jar run.jar %*
+java -jar rubikFROOK.jar %*
 popd
